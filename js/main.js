@@ -10,12 +10,35 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ── Hamburger ── */
-ham.addEventListener('click', () => {
-  mobNav.classList.toggle('open');
-});
-mobNav.querySelectorAll('a').forEach(a => {
-  a.addEventListener('click', () => mobNav.classList.remove('open'));
-});
+function closeMobNav() {
+  mobNav.classList.remove('open');
+  ham.classList.remove('open');
+  ham.setAttribute('aria-expanded', 'false');
+  document.body.classList.remove('nav-open');
+}
+
+function openMobNav() {
+  mobNav.classList.add('open');
+  ham.classList.add('open');
+  ham.setAttribute('aria-expanded', 'true');
+  document.body.classList.add('nav-open');
+}
+
+if (ham && mobNav) {
+  ham.addEventListener('click', () => {
+    if (mobNav.classList.contains('open')) closeMobNav();
+    else openMobNav();
+  });
+  mobNav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMobNav);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMobNav();
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) closeMobNav();
+  });
+}
 
 /* ── Smooth scroll ── */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
